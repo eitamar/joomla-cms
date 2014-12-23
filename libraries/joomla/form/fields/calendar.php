@@ -50,6 +50,14 @@ class JFormFieldCalendar extends JFormField
 	 * @since  3.2
 	 */
 	protected $filter;
+	
+	/**
+	 * Layout to render the input
+	 *
+	 * @var  string
+	 */
+	protected $renderInputLayout = 'joomla.form.fields.calendar';
+
 
 	/**
 	 * Method to get certain otherwise inaccessible properties from the form field object.
@@ -204,11 +212,12 @@ class JFormFieldCalendar extends JFormField
 
 				break;
 		}
+		
+		
+		$layoutData['field']		= $this;
+		$layoutData['attributes']	= $attributes;
+		$layoutData['format']		= $format;
 
-		// Including fallback code for HTML5 non supported browsers.
-		JHtml::_('jquery.framework');
-		JHtml::_('script', 'system/html5fallback.js', false, true);
-
-		return JHtml::_('calendar', $this->value, $this->name, $this->id, $format, $attributes);
+		return JLayoutHelper::render($this->renderInputLayout , $layoutData);				
 	}
 }
