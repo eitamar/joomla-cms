@@ -28,6 +28,13 @@ class JFormFieldAccessLevel extends JFormFieldList
 	 * @since  11.1
 	 */
 	protected $type = 'AccessLevel';
+	
+	/**
+	 * Layout to render the input
+	 *
+	 * @var  string
+	 */
+	protected $renderInputLayout = 'joomla.form.fields.accesslevel';
 
 	/**
 	 * Method to get the field input markup.
@@ -52,8 +59,11 @@ class JFormFieldAccessLevel extends JFormFieldList
 		$attr .= $this->onchange ? ' onchange="' . $this->onchange . '"' : '';
 
 		// Get the field options.
-		$options = $this->getOptions();
+		$layoutData['options']		= $this->getOptions();
+		
+		$layoutData['field']		= $this;
+		$layoutData['attributes']	= $attr;   //TODO: break the attr to pieces and load it to the layout for creating the right matrkup
 
-		return JHtml::_('access.level', $this->name, $this->value, $attr, $options, $this->id);
+		return JLayoutHelper::render($this->renderInputLayout , $layoutData);
 	}
 }
