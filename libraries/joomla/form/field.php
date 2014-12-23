@@ -315,6 +315,13 @@ abstract class JFormField
 	 * @var  string
 	 */
 	protected $renderLabelLayout = 'joomla.form.renderlabel';
+	
+	/**
+	 * Layout to render the input
+	 *
+	 * @var  string
+	 */
+	protected $renderInputLayout = '';
 
 	/**
 	 * Method to instantiate the form field object.
