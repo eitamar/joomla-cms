@@ -29,6 +29,14 @@ class JFormFieldTel extends JFormFieldText
 	 * @since  11.1
 	 */
 	protected $type = 'Tel';
+	
+	/**
+	 * Layout to render the input
+	 *
+	 * @var  string
+	 */
+	protected $renderInputLayout = 'joomla.form.fields.tel';
+	
 
 	/**
 	 * Method to get the field input markup.
@@ -43,27 +51,23 @@ class JFormFieldTel extends JFormFieldText
 		$hint = $this->translateHint ? JText::_($this->hint) : $this->hint;
 
 		// Initialize some field attributes.
-		$size         = !empty($this->size) ? ' size="' . $this->size . '"' : '';
-		$maxLength    = !empty($this->maxLength) ? ' maxlength="' . $this->maxLength . '"' : '';
-		$class        = !empty($this->class) ? ' class="' . $this->class . '"' : '';
-		$readonly     = $this->readonly ? ' readonly' : '';
-		$disabled     = $this->disabled ? ' disabled' : '';
-		$required     = $this->required ? ' required aria-required="true"' : '';
-		$hint         = $hint ? ' placeholder="' . $hint . '"' : '';
+		$layoutData['size']         = !empty($this->size) ? ' size="' . $this->size . '"' : '';
+		$layoutData['maxLength']    = !empty($this->maxLength) ? ' maxlength="' . $this->maxLength . '"' : '';
+		$layoutData['class']        = !empty($this->class) ? ' class="' . $this->class . '"' : '';
+		$layoutData['readonly']     = $this->readonly ? ' readonly' : '';
+		$layoutData['disabled']     = $this->disabled ? ' disabled' : '';
+		$layoutData['required']     = $this->required ? ' required aria-required="true"' : '';
+		$layoutData['hint']         = $hint ? ' placeholder="' . $hint . '"' : '';
 		$autocomplete = !$this->autocomplete ? ' autocomplete="off"' : ' autocomplete="' . $this->autocomplete . '"';
-		$autocomplete = $autocomplete == ' autocomplete="on"' ? '' : $autocomplete;
-		$autofocus    = $this->autofocus ? ' autofocus' : '';
-		$spellcheck   = $this->spellcheck ? '' : ' spellcheck="false"';
+		$layoutData['autocomplete'] = $autocomplete == ' autocomplete="on"' ? '' : $autocomplete;
+		$layoutData['autofocus']    = $this->autofocus ? ' autofocus' : '';
+		$layoutData['spellcheck']   = $this->spellcheck ? '' : ' spellcheck="false"';
 
 		// Initialize JavaScript field attributes.
-		$onchange = $this->onchange ? ' onchange="' . $this->onchange . '"' : '';
+		$layoutData['onchange'] = $this->onchange ? ' onchange="' . $this->onchange . '"' : '';
 
-		// Including fallback code for HTML5 non supported browsers.
-		JHtml::_('jquery.framework');
-		JHtml::_('script', 'system/html5fallback.js', false, true);
-
-		return '<input type="tel" name="' . $this->name . '"' . $class . ' id="' . $this->id . '" value="'
-			. htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8') . '"' . $size . $disabled . $readonly
-			. $hint . $autocomplete . $autofocus . $spellcheck . $onchange . $maxLength . $required . ' />';
+		$layoutData['field']		= $this;
+		
+		return JLayoutHelper::render($this->renderInputLayout , $layoutData);
 	}
 }
