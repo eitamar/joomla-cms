@@ -41,6 +41,13 @@ class JFormFieldTextarea extends JFormField
 	 * @since  3.2
 	 */
 	protected $columns;
+	
+	/**
+	 * Layout to render the input
+	 *
+	 * @var  string
+	 */
+	protected $renderInputLayout = 'joomla.form.fields.textarea'; 
 
 	/**
 	 * Method to get certain otherwise inaccessible properties from the form field object.
@@ -128,28 +135,25 @@ class JFormFieldTextarea extends JFormField
 		$hint = $this->translateHint ? JText::_($this->hint) : $this->hint;
 
 		// Initialize some field attributes.
-		$class        = !empty($this->class) ? ' class="' . $this->class . '"' : '';
-		$disabled     = $this->disabled ? ' disabled' : '';
-		$readonly     = $this->readonly ? ' readonly' : '';
-		$columns      = $this->columns ? ' cols="' . $this->columns . '"' : '';
-		$rows         = $this->rows ? ' rows="' . $this->rows . '"' : '';
-		$required     = $this->required ? ' required aria-required="true"' : '';
-		$hint         = $hint ? ' placeholder="' . $hint . '"' : '';
+		$layoutData['class']        = !empty($this->class) ? ' class="' . $this->class . '"' : '';
+		$layoutData['disabled']     = $this->disabled ? ' disabled' : '';
+		$layoutData['readonly']     = $this->readonly ? ' readonly' : '';
+		$layoutData['columns']      = $this->columns ? ' cols="' . $this->columns . '"' : '';
+		$layoutData['rows']         = $this->rows ? ' rows="' . $this->rows . '"' : '';
+		$layoutData['required']     = $this->required ? ' required aria-required="true"' : '';
+		$layoutData['hint']         = $hint ? ' placeholder="' . $hint . '"' : '';
 		$autocomplete = !$this->autocomplete ? ' autocomplete="off"' : ' autocomplete="' . $this->autocomplete . '"';
-		$autocomplete = $autocomplete == ' autocomplete="on"' ? '' : $autocomplete;
-		$autofocus    = $this->autofocus ? ' autofocus' : '';
-		$spellcheck   = $this->spellcheck ? '' : ' spellcheck="false"';
+		$layoutData['autocomplete'] = $autocomplete == ' autocomplete="on"' ? '' : $autocomplete;
+		$layoutData['autofocus']    = $this->autofocus ? ' autofocus' : '';
+		$layoutData['spellcheck']   = $this->spellcheck ? '' : ' spellcheck="false"';
 
 		// Initialize JavaScript field attributes.
-		$onchange = $this->onchange ? ' onchange="' . $this->onchange . '"' : '';
-		$onclick = $this->onclick ? ' onclick="' . $this->onclick . '"' : '';
+		$layoutData['onchange'] = $this->onchange ? ' onchange="' . $this->onchange . '"' : '';
+		$layoutData['onclick'] = $this->onclick ? ' onclick="' . $this->onclick . '"' : '';
 
-		// Including fallback code for HTML5 non supported browsers.
-		JHtml::_('jquery.framework');
-		JHtml::_('script', 'system/html5fallback.js', false, true);
-
-		return '<textarea name="' . $this->name . '" id="' . $this->id . '"' . $columns . $rows . $class
-			. $hint . $disabled . $readonly . $onchange . $onclick . $required . $autocomplete . $autofocus . $spellcheck . ' >'
-			. htmlspecialchars($this->value, ENT_COMPAT, 'UTF-8') . '</textarea>';
+		$layoutData['field']		= $this;
+		
+		
+		return JLayoutHelper::render($this->renderInputLayout , $layoutData);
 	}
 }
