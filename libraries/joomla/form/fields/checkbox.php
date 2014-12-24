@@ -35,6 +35,13 @@ class JFormFieldCheckbox extends JFormField
 	 * @since  3.2
 	 */
 	protected $checked = false;
+	
+	/**
+	 * Layout to render the input
+	 *
+	 * @var  string
+	 */
+	protected $renderInputLayout = 'joomla.form.fields.checkbox';
 
 	/**
 	 * Method to get certain otherwise inaccessible properties from the form field object.
@@ -120,23 +127,19 @@ class JFormFieldCheckbox extends JFormField
 	protected function getInput()
 	{
 		// Initialize some field attributes.
-		$class     = !empty($this->class) ? ' class="' . $this->class . '"' : '';
-		$disabled  = $this->disabled ? ' disabled' : '';
-		$value     = !empty($this->default) ? $this->default : '1';
-		$required  = $this->required ? ' required aria-required="true"' : '';
-		$autofocus = $this->autofocus ? ' autofocus' : '';
-		$checked   = $this->checked || !empty($this->value) ? ' checked' : '';
+		$layoutData['class']     = !empty($this->class) ? ' class="' . $this->class . '"' : '';
+		$layoutData['disabled']  = $this->disabled ? ' disabled' : '';
+		$layoutData['value']     = !empty($this->default) ? $this->default : '1';
+		$layoutData['required']  = $this->required ? ' required aria-required="true"' : '';
+		$layoutData['autofocus'] = $this->autofocus ? ' autofocus' : '';
+		$layoutData['checked']   = $this->checked || !empty($this->value) ? ' checked' : '';
 
 		// Initialize JavaScript field attributes.
-		$onclick  = !empty($this->onclick) ? ' onclick="' . $this->onclick . '"' : '';
-		$onchange = !empty($this->onchange) ? ' onchange="' . $this->onchange . '"' : '';
+		$layoutData['onclick']  = !empty($this->onclick) ? ' onclick="' . $this->onclick . '"' : '';
+		$layoutData['onchange'] = !empty($this->onchange) ? ' onchange="' . $this->onchange . '"' : '';
 
-		// Including fallback code for HTML5 non supported browsers.
-		JHtml::_('jquery.framework');
-		JHtml::_('script', 'system/html5fallback.js', false, true);
+		$layoutData['field']		= $this;
 
-		return '<input type="checkbox" name="' . $this->name . '" id="' . $this->id . '" value="'
-			. htmlspecialchars($value, ENT_COMPAT, 'UTF-8') . '"' . $class . $checked . $disabled . $onclick . $onchange
-			. $required . $autofocus . ' />';
+		return JLayoutHelper::render($this->renderInputLayout , $layoutData);
 	}
 }
